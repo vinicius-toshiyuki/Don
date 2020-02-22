@@ -1,0 +1,80 @@
+<data>
+	<unit type="player">
+		<name>Don</name>
+		<level>1</level>
+		<life>13</life>
+		<attack>7</attack>
+		<defense>5</defense>
+		<agility>7</agility>
+	</unit>
+	<unit type="monster">
+		<name>Bat</name>
+		<level>3</level>
+		<life>10</life>
+		<attack>7</attack>
+		<defense>2</defense>
+		<agility>8</agility>
+		<inventory>
+			<name prob="56">Fruit</name>
+		</inventory>
+	</unit>
+	<unit type="monster">
+		<name>Rat</name>
+		<level>3</level>
+		<life>20</life>
+		<attack>5</attack>
+		<defense>2</defense>
+		<agility>12</agility>
+		<inventory>
+			<name prob="10">Fur</name>
+			<name prob="25">Herb</name>
+		</inventory>
+	</unit>
+	<map id="0">
+		<type>home</type>
+		<chance>0</chance>
+		<connection>
+			<id>1</id>
+		</connection>
+	</map>
+	<map id="1">
+		<type>forest</type>
+		<chance>55</chance>
+		<monster>
+			<name>Bat</name>
+			<name>Rat</name>
+		</monster>
+		<connection>
+			<id>0</id>
+			<id>2</id>
+			<id>3</id>
+		</connection>
+	</map>
+	<map id="2">
+		<type>cave</type>
+		<chance>95</chance>
+		<monster>
+			<name>Bat</name>
+		</monster>
+		<connection>
+			<id>1</id>
+		</connection>
+	</map>
+	<map id="3">
+		<type>city</type>
+		<chance>35</chance>
+		<monster>
+			<name>Rat</name>
+		</monster>
+		<connection>
+			<id>1</id>
+		</connection>
+	</map>
+	<item name="Fur"></item>
+	<item name="Herb">
+		<regen>10</regen>
+	</item>
+	<item name="Fruit">
+		<regen>3</regen>
+	</item>
+</data>
