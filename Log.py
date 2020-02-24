@@ -11,6 +11,7 @@ class Log:
             Log._tagged[tag] = [message]
     
     def flush():
+        Log._clear()
         while len(Log._common) > 0:
             print(Log._common.pop(0))
 

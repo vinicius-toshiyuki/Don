@@ -18,11 +18,20 @@ class Game:
     def mainloop(s):
         while True:
             if (c := s.__map.get_encounter()) is not None:
-                s._battle(
+                winner = s._battle(
                        *sorted(
                             (s._player, c,),
                             key=lambda u: u.get_stats()["Agility"]
                             )) 
+                if winner == s._player and (att_change := s._player.grant_exp(c.exp_value())):
+                    Log.put("Level up!", Game.__player_tag)
+                    for stat in s._player.get_stats():
+                        Log.put("{}: {}".format(stat, s._player.get_stats()[stat]) + (" (+{})".format(att_change[stat]) if stat in att_change else ''), s.__player_tag)
+                if winner == c:
+                    Log.put("Game Over", "Game")
+                    Log.flush()
+                    exit()
+
             s._action()
         
     def _action(s):
@@ -32,23 +41,12 @@ class Game:
             IO.default)) == "Wait":
                 pass
         elif i == "Walk":
-            if (i := IO.prompt(
-                    "Where to go:",
-                    [IO.go_back] + s.__map.get_connections(),
-                    IO.default
-                    )) != IO.go_back:
-                s._change_map(i)
+            s.__walk()
         elif i == "Stats":
+            s.__show_stats(s._player)
             s._action()
         elif i == "Bag":
-            if (i := IO.prompt(
-                    "Choose a item:",
-                    [IO.go_back] + ["{} ({})".format(c, c.count()) for c in s._player.get_items()],
-                    return_option=True
-                    )) != 1:
-                i = s._player.get_items()[i - 2]
-                if i.is_consumable() and IO.prompt("Consume {}?".format(i), ("Yes", "No"), IO.default) == "Yes":
-                    i.consume(s._player)
+            s.__item_menu(s._player)
             s._action()
 
     def _change_map(s, connection):
@@ -74,44 +72,66 @@ class Game:
         else:
             action = choice(["Fight"] * 2 + ["Guard"])
         
-        return {
-            "Fight" : s.__fight,
-            "Guard" : s.__guard,
-            "Show items" : s.__item_menu,
-            "Run" : s.__run,
-            "Show stats" : s.__show_stats
-        }[action](u1, u2)
+        if action == "Fight":
+            s.__fight(u1, u2)
+        elif action == "Guard":
+            s.__guard(u1)
+        elif action == "Show items":
+            if s.__item_menu(u1) is None:
+                u1, u2 = u2, u1
+        elif action == "Run":
+            s.__run(u1, u2)
+        elif action == "Show stats":
+            s.__show_stats(u1)
+            u1, u2 = u2, u1
         
-    def __fight(s, u, *args):
-        Log.put("{} took {} damage from {}".format(*args, args[0].take_damage(u.get_damage()), u) ,Game.__battle_tag)
-        return s._battle(*args, u)
+        return s._battle(u2, u1)
+        
+    def __fight(s, u1, u2):
+        Log.put("{} took {} damage from {}".format(u2, u2.take_damage(u1.get_damage()), u1), Game.__battle_tag)
 
-    def __guard(s, u, *args):
+    def __guard(s, u):
         Log.put("{} is on guard!".format(u), Game.__battle_tag)
         u.guard()
-        return s._battle(*args, u)
 
-    def __run(s, u, *args):
+    def __run(s, u1, u2):
         Log.put("Run not working", "TODO")
-        return s._battle(*args, u)
 
-    def __show_stats(s, u, *args):
+    def __show_stats(s, u):
         [Log.put(
             "{}: {}".format(stat, u.get_stats()[stat]),
             Game.__player_tag
             ) for stat in u.get_stats()]
-        return s._battle(u, *args)
 
-    def __item_menu(s, u, *args):
+    def __item_menu(s, u):
         i = IO.prompt(
                 "Items:",
                 [IO.go_back] + ["{} ({})".format(i, i.count()) for i in u.get_items()],
                 IO.default,
                 return_option=True
                 )
-        if i == IO.go_back:
-            return s._battle(u, *args)
-        return s._battle(*args, u)
+        if i != IO.default:
+            item = u.get_items()[i - 2]
+            if item.is_consumable() and IO.prompt(
+                    "Consume {}".format(item),
+                    ("Yes", "No"),
+                    IO.default
+                    ) == "Yes":
+                Log.put("{} consumed {}".format(s._player, item), s.__player_tag)
+                item.consume(u)
+                return str(item)
+            else:
+                return s.__item_menu(u)
+        return None
+
+    def __walk(s):
+        if (i := IO.prompt(
+                "Where to go:",
+                [IO.go_back] + s.__map.get_connections(),
+                IO.default
+                )) != IO.go_back:
+            s._change_map(i)
+            
 """
 def fight(u1, u2):
     if not u1.alive():
