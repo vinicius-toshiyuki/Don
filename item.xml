@@ -1,9 +1,9 @@
 <items>
 	<item name="Fur"/>
 	<item name="Herb">
-		<regen value="10"/>
+		<attribute name="healing" value="10"/>
 	</item>
 	<item name="Fruit">
-		<regen value="3"/>
+		<attribute name="healing" value="3"/>
 	</item>
 </items>

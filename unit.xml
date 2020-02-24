@@ -1,0 +1,32 @@
+<units>
+	<player name="Don">
+		<level value="1"/>
+		<life value="13" max_value="13"/>
+		<attack value="7"/>
+		<defense value="5"/>
+		<agility value="7"/>
+		<inventory>
+			<item name="Fruit" quantity="1"/>
+		</inventory>
+		<experience value="0" to_next="12"/>
+	</player>
+	<creature name="Bat">
+		<life value="10" max_value="10"/>
+		<attack value="7"/>
+		<defense value="2"/>
+		<agility value="8"/>
+		<inventory>
+			<item name="Fruit" drop_rate="56"/>
+		</inventory>
+	</creature>
+	<creature name="Rat">
+		<life value="20" max_value="20"/>
+		<attack value="5"/>
+		<defense value="2"/>
+		<agility value="12"/>
+		<inventory>
+			<item name="Fur" drop_rate="10"/>
+			<item name="Herb" drop_rate="25"/>
+		</inventory>
+	</creature>
+</units>

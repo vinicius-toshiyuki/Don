@@ -1,0 +1,10 @@
+<maps>
+	<map name="Home" encounter_rate="0">
+		<connection to="Forest"/>
+	</map>
+	<map name="Forest" encounter_rate="55">
+		<connection to="Home"/>
+		<unit name="Bat" type="creature"/>
+		<unit name="Rat" type="creature"/>
+	</map>
+</maps>
