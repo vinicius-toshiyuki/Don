@@ -16,7 +16,7 @@
 		<defense value="2"/>
 		<agility value="8"/>
 		<inventory>
-			<item name="Fruit" drop_rate="56"/>
+			<item name="Fruit" quantity="3" drop_rate="56"/>
 		</inventory>
 	</creature>
 	<creature name="Rat">
@@ -25,8 +25,8 @@
 		<defense value="2"/>
 		<agility value="12"/>
 		<inventory>
-			<item name="Fur" drop_rate="10"/>
-			<item name="Herb" drop_rate="25"/>
+			<item name="Fur" quantity="2" drop_rate="10"/>
+			<item name="Herb" quantity="1" drop_rate="25"/>
 		</inventory>
 	</creature>
 </units>

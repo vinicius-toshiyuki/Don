@@ -14,7 +14,7 @@ class Map:
         try:
             if name is None:
                 name = choice(list(s._units["creature"].keys()))
-            return copy.deepcopy(s._units["creature"][name])
+            return copy.copy(s._units["creature"][name])
         except:
             return None
 
@@ -27,8 +27,8 @@ class Map:
             s._din_encounter_rate += s._din_encounter_rate * 0.05
         return None
 
-    @property
-    def connections(s): return s._connections
+    def get_connections(s):
+        return s._connections
 
     def __str__(s):
         return s._name

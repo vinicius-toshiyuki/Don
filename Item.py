@@ -1,51 +1,36 @@
 class __Item:
-    def __init__(s, name, **attr):
+    def __init__(s, name):
         s._name = name
-        s._count = 0
-        s._attr = attr
 
-    def count(s):
-        return s._count
-
-    def is_empty(s):
-        return s._count == 0
-
-    def increase(s, value):
-        if (value := int(value)) > 0:
-            s._count += value
-        return s
-
-    def decrease(s, value):
-        if (value := int(value)) >= s._count:
-            s._count -= value
-            i = type(s)(str(s))
-            i.increase(value)
-            return i
-        return None
-
-    def is_consumable(s):
-        return False
+    @property
+    def consumable(s): return False
+    @property
+    def name(s): return s._name
 
     def __str__(s):
         return s._name
 
 class __Consumable(__Item):
-    def is_consumable(s):
+    def __init__(s, name, **attrib):
+        super().__init__(name)
+        s._attrib = attrib
+
+    @property
+    def consumable(s):
         return True
 
-    def consume(s, unit):
-        return unit.take_item(str(s)) is not None
+    @property
+    def attrib(s): return dict(s._attrib)
 
-class __HealingItem(__Consumable):
-    def consume(s, unit):
-        unit.heal(s._attr["healing"])
-        super().consume(unit)
+class Herb(__Consumable):
+    def healing(s):
+        return '__var__ = {};' + \
+                '__var__.heal({})'.format(s._attrib['healing'])
 
-class Herb(__HealingItem):
-    pass
-
-class Fruit(__HealingItem):
-    pass
+class Fruit(__Consumable):
+    def healing(s):
+        return '__var__ = {};' + \
+                '__var__.heal({})'.format(s._attrib['healing'])
 
 class Fur(__Item):
     pass

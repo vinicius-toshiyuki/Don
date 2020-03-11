@@ -4,6 +4,7 @@ import copy
 from Unit import *
 from Item import *
 from Map import *
+from Inventory import *
 
 class Parser:
     def __init__(s):
@@ -12,28 +13,29 @@ class Parser:
         s._parsed_creatures = dict()
         s._parsed_maps = dict()
 
-    def get_player(s, unit_path="unit.xml"):
+    # TODO: Essas funções de get player faz como funçáõ dentro
+    def get_player(s, unit_path):
         s._units = ET.parse(unit_path).getroot()
-        p = s._units.find("player")
+        p = s._units.find('player')
         return Player(
-                p.get("name"),
+                p.get('name'),
                 s._get_player_items(p),
-                p.find("life").get("max_value"),
-                p.find("life").get("value"),
-                p.find("attack").get("value"),
-                p.find("defense").get("value"),
-                p.find("agility").get("value"),
-                p.find("level").get("value"),
-                p.find("experience").get("value"),
-                p.find("experience").get("to_next")
+                p.find('life').get('max_value'),
+                p.find('life').get('value'),
+                p.find('attack').get('value'),
+                p.find('defense').get('value'),
+                p.find('agility').get('value'),
+                p.find('level').get('value'),
+                p.find('experience').get('value'),
+                p.find('experience').get('to_next')
                 )
     def _get_player_items(s, p):
-        return list(map(lambda i:
-            copy.copy(s._parsed_items[i.get("name")]).increase(int(i.get("quantity"))),
-            p.findall("inventory/item")
-            ))
+        inventory = Inventory()
+        for i in p.findall('inventory/item'):
+            inventory.put((i.get('quantity'), i.get('name'),))
+        return inventory
 
-    def get_creatures(s, unit_path="unit.xml"):
+    def get_creatures(s, unit_path):
         s._units = ET.parse(unit_path).getroot()
         creatures = s._units.findall("creature")
         s._parsed_creatures = dict(map(lambda c:
@@ -44,24 +46,24 @@ class Parser:
 		c.find("life").get("value"),
 		c.find("attack").get("value"),
 		c.find("defense").get("value"),
-		c.find("agility").get("value")
+		c.find("agility").get("value"),
+                s.__get_drop_rates(c)
                 )),
             creatures
             ))
         return s._parsed_creatures
     def _get_creature_items(s, c):
-        return list(map(lambda i:
-            copy.copy(s._parsed_items[i.get("name")]).increase(s.__get_drop_quantity(int(i.get("drop_rate")))),
-            c.findall("inventory/item")
-            ))
-    def __get_drop_quantity(s, drop_rate):
-        count = 0
-        while rand(0, 99) < drop_rate:
-            drop_rate = int(drop_rate / 2.5)
-            count += 1
-        return count
+        inventory = Inventory()
+        for i in c.findall('inventory/item'):
+            inventory.put((i.get('quantity'), i.get('name'),))
+        return inventory
+    def __get_drop_rates(s, c):
+        drop_rates = {}
+        for i in c.findall('inventory/item'):
+            drop_rates[i.get('name')] = int(i.get('drop_rate'))
+        return drop_rates
 
-    def get_maps(s, map_path="map.xml"):
+    def get_maps(s, map_path):
         s._maps = ET.parse(map_path).getroot()
         maps = s._maps.findall("map")
         s._parsed_maps = dict(map(lambda m:
@@ -98,7 +100,7 @@ class Parser:
             units[t] = dict(units[t])
         return units
 
-    def get_items(s, item_path="item.xml"):
+    def get_items(s, item_path):
         s._items = ET.parse(item_path).getroot()
         items = s._items.findall("item")
 
@@ -109,6 +111,7 @@ class Parser:
                 )),
             items
             ))
+        Inventory.set(s._parsed_items)
         return s._parsed_items
 """
 p = Parser()

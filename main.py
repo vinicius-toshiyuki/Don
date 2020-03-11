@@ -3,10 +3,10 @@ from Game import *
 
 parser = Parser()
 
-items = parser.get_items()
-creatures = parser.get_creatures()
-player = parser.get_player()
-maps = parser.get_maps()
+items = parser.get_items('item.xml')
+creatures = parser.get_creatures('unit.xml')
+player = parser.get_player('unit.xml')
+maps = parser.get_maps('map.xml')
     
 units = {
         "player" : player,

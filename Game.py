@@ -1,7 +1,7 @@
 from IO import *
 from Log import *
 from Unit import Player
-from random import choice
+from random import choice, randint as rand
 
 class Game:
     __battle_tag = "Battle"
@@ -18,16 +18,32 @@ class Game:
     def mainloop(s):
         while True:
             if (c := s.__map.get_encounter()) is not None:
+                Log.put("{} encountered {}".format(s._player, c), s.__battle_tag)
                 winner = s._battle(
                        *sorted(
                             (s._player, c,),
-                            key=lambda u: u.get_stats()["Agility"]
+                            key=lambda u: u.agility
                             )) 
-                if winner == s._player and (att_change := s._player.grant_exp(c.exp_value())):
-                    Log.put("Level up!", Game.__player_tag)
-                    for stat in s._player.get_stats():
-                        Log.put("{}: {}".format(stat, s._player.get_stats()[stat]) + (" (+{})".format(att_change[stat]) if stat in att_change else ''), s.__player_tag)
-                if winner == c:
+                if winner == s._player:
+                    for i in c.inventory.items:
+                        drop_rate = c.drop_rates[i]
+                        item_count = c.inventory.count(i)
+                        drop_count = 0
+                        while drop_count < item_count and rand(0,99) < drop_rate:
+                            drop_count += 1
+                            drop_rate /= 2
+
+                        if drop_count > 0:
+                            Log.put('{} received an item'.format(s._player), s.__player_tag)
+                            s._player.inventory.put(c.inventory.take(i, drop_count))
+
+                    exp = c.exp_value()
+                    Log.put("{} received {} experience".format(s._player, exp), s.__player_tag)
+                    if (att_change := s._player.grant_exp(exp)):
+                        Log.put("Level up!", Game.__player_tag)
+                        for stat in s._player.stats:
+                            Log.put("{}: {}".format(stat, s._player.stats[stat]) + (" (+{})".format(att_change[stat]) if stat in att_change else ''), s.__player_tag)
+                else:
                     Log.put("Game Over", "Game")
                     Log.flush()
                     exit()
@@ -39,7 +55,7 @@ class Game:
             "Take an action:",
             ("Wait", "Walk", "Stats", "Bag"),
             IO.default)) == "Wait":
-                pass
+            Log.put("{} waited".format(s._player), s.__player_tag)
         elif i == "Walk":
             s.__walk()
         elif i == "Stats":
@@ -53,18 +69,18 @@ class Game:
         s.__map = s._maps[connection]
 
     def _battle(s, u1, u2):
-        if not u1.is_alive():
+        if not u1.health > 0:
             Log.put("{} won".format(u2), Game.__battle_tag)
             return u2
-        if not u2.is_alive():
+        if not u2.health > 0:
             Log.put("{} won".format(u1), Game.__battle_tag)
             return u1
 
         u1.unguard()
-        Log.put("{} has {}/{} health".format(u1, *u1.get_stats()["Health"]), Game.__battle_tag)
-        Log.put("{} has {}/{} health".format(u2, *u2.get_stats()["Health"]), Game.__battle_tag)
 
         if type(u1) == Player:
+            Log.put("{} has {}/{} health".format(u1, u1.health, u1.max_health), Game.__battle_tag)
+            Log.put("{} has {}/{} health".format(u2, u2.health, u2.max_health), Game.__battle_tag)
             action = IO.prompt(
                     "Choose an action:",
                     ("Fight", "Guard", "Show items", "Run", "Show stats"),
@@ -80,7 +96,8 @@ class Game:
             if s.__item_menu(u1) is None:
                 u1, u2 = u2, u1
         elif action == "Run":
-            s.__run(u1, u2)
+            if s.__run(u1, u2):
+                return u2
         elif action == "Show stats":
             s.__show_stats(u1)
             u1, u2 = u2, u1
@@ -95,90 +112,46 @@ class Game:
         u.guard()
 
     def __run(s, u1, u2):
-        Log.put("Run not working", "TODO")
+        if u1.run(u2):
+            Log.put("{} ran away from combat".format(u1), s.__battle_tag)
+            return True
+        else:
+            Log.put("{} tried to run away but failed!".format(u1), s.__battle_tag)
+            return False
 
     def __show_stats(s, u):
         [Log.put(
-            "{}: {}".format(stat, u.get_stats()[stat]),
+            "{}: {}".format(stat, u.stats[stat]),
             Game.__player_tag
-            ) for stat in u.get_stats()]
+            ) for stat in u.stats]
 
     def __item_menu(s, u):
         i = IO.prompt(
                 "Items:",
-                [IO.go_back] + ["{} ({})".format(i, i.count()) for i in u.get_items()],
+                [IO.go_back] + ["{} ({})".format(i, u.inventory.count(i)) for i in u.inventory.items],
                 IO.default,
                 return_option=True
                 )
         if i != IO.default:
-            item = u.get_items()[i - 2]
-            if item.is_consumable() and IO.prompt(
+            item = u.inventory.take(u.inventory.items[i-2])
+            if item.consumable and IO.prompt(
                     "Consume {}".format(item),
                     ("Yes", "No"),
                     IO.default
                     ) == "Yes":
                 Log.put("{} consumed {}".format(s._player, item), s.__player_tag)
-                item.consume(u)
+                u.use_item(item)
                 return str(item)
             else:
+                u.inventory.put(item)
                 return s.__item_menu(u)
         return None
 
     def __walk(s):
         if (i := IO.prompt(
                 "Where to go:",
-                [IO.go_back] + s.__map.get_connections(),
+                [IO.go_back] + s.__map.connections,
                 IO.default
                 )) != IO.go_back:
+            Log.put("{} walked to {}".format(s._player, i), s.__player_tag)
             s._change_map(i)
-            
-"""
-def fight(u1, u2):
-    if not u1.alive():
-        return u2
-    if not u2.alive():
-        return u1
-    
-    Log.flush()
-    
-    default = 1
-    if type(u1) == Player:
-        i = prompt(
-                "What will {} do?".format(u1),
-                {
-                    1 : "Fight",
-                    2 : "Guard",
-                    3 : "Run",
-                    4 : "Use item"
-                }, default
-        )
-        default = i
-        clear()
-    else:
-        i = rand(0, 2) % 2 + 1
-
-    if  i == 1:
-        Log.log("{} hit {} for {} damage".format(u1, u2, u2.take_damage(u1.calc_damage())), "Battle")
-        Log.log("{} has {}/{} life remaining".format(u2, u2.life, u2.max_life), "Battle")
-    elif i == 2:
-        u1.guard()
-        Log.log("{} is on guard!".format(u1), "Battle")
-    elif i == 3:
-        if u1.run(u2):
-            Log.log("{} ran away from combat".format(u1), "Battle")
-            Log.log("{} is now sad and alone".format(u2), "Battle")
-            return None
-        else:
-            Log.log("{} tried to run away but failed!".format(u1), "Battle")
-    elif i == 4:
-        if (j := prompt(
-                "Choose item:",
-                ["Go back"] + ["{} ({})".format(c, u1.get_item_count(c)) for c in u1.get_consumables()]
-                )) == 1:
-            return fight(u1, u2)
-        else:
-            cons = u1.get_consumables()[j-2]
-            cons.consume(u1)
-            Log.log("{} consumed a {}".format(u1, cons), "Battle")
-    u2.unguard()
-    return fight(u2, u1)"""
