@@ -1,5 +1,6 @@
 from Parser import *
 from Game import *
+import Widget.Manager as wm
 
 parser = Parser()
 
@@ -13,5 +14,7 @@ units = {
         "creatures" : creatures
         }
 
-g = Game(units, maps, items)
+m = wm.Manager()
+m.background()
+g = Game(m, units, maps, items)
 g.mainloop()
