@@ -6,6 +6,7 @@
 !_TAG_PROGRAM_URL	https://ctags.io/	/official site/
 !_TAG_PROGRAM_VERSION	5.8	//
 Actor	Unit.py	/^class Actor(Unit):$/;"	c
+ControlWindow	termwin/controlwindow.py	/^class ControlWindow(Window):$/;"	c
 Creature	Unit.py	/^class Creature(Actor):$/;"	c
 Dummy	Unit.py	/^class Dummy(Unit):$/;"	c
 ET	Parser.py	/^import xml.etree.ElementTree as ET$/;"	I
@@ -37,14 +38,17 @@ __init__	Game.py	/^	def __init__(s, units, maps, items):$/;"	m	class:Game
 __init__	Inventory.py	/^    def __init__(s):$/;"	m	class:Inventory
 __init__	Item.py	/^    def __init__(s, name):$/;"	m	class:__Item
 __init__	Item.py	/^    def __init__(s, name, **attrib):$/;"	m	class:__Consumable
-__init__	Map.py	/^    def __init__(s, name, encounter_rate, connections, units):$/;"	m	class:Map
+__init__	Map.py	/^	def __init__(s, name, encounter_rate, connections, units):$/;"	m	class:Map
 __init__	Parser.py	/^    def __init__(s):$/;"	m	class:Parser
 __init__	Unit.py	/^    def __init__(s, name, inventory):$/;"	m	class:Unit
 __init__	Unit.py	/^    def __init__(s, name, inventory, max_health, health, attack, defense, agility):$/;"	m	class:Actor
 __init__	Unit.py	/^    def __init__(s, name, inventory, max_health, health, attack, defense, agility, drop_rates):$/;"	m	class:Creature
 __init__	Unit.py	/^    def __init__(s, name, inventory, max_health, health, attack, defense, agility, level, exp, e/;"	m	class:Player
+__init__	mud.py	/^	def __init__(s, line, col, height, width, orientation='vertical'):$/;"	m	class:frame
+__init__	mud.py	/^	def __init__(s, weight=1):$/;"	m	class:window
 __init__	termwin/__init__.py	/^	def __init__(s, background='000000', foreground='ffffff'):$/;"	m	class:Manager
 __init__	termwin/__init__.py	/^	def __init__(s, column, row, height, width, orientation='vertical', background='000000', foregr/;"	m	class:Root
+__init__	termwin/controlwindow.py	/^	def __init__(s, *args, **kwargs):$/;"	m	class:ControlWindow
 __init__	termwin/frame.py	/^	def __init__(s, weight=1, background='000000', foreground='ffffff', orientation='vertical'):$/;"	m	class:Frame
 __init__	termwin/widget.py	/^	def __init__(s, weight=1, background='000000', foreground='ffffff'):$/;"	m	class:Widget
 __init__	termwin/window.py	/^	def __init__(s, weight=1, background='000000', foreground='ffffff', timeout=0, maxlines=100):$/;"	m	class:Window
@@ -57,12 +61,13 @@ __set	Inventory.py	/^    __set = False$/;"	v	class:Inventory	file:
 __show_items	Game.py	/^	def __show_items(s, u):$/;"	m	class:Game	file:
 __show_stats	Game.py	/^	def __show_stats(s, u):$/;"	m	class:Game	file:
 __str__	Item.py	/^    def __str__(s):$/;"	m	class:__Item
-__str__	Map.py	/^    def __str__(s):$/;"	m	class:Map
+__str__	Map.py	/^	def __str__(s):$/;"	m	class:Map
 __str__	Unit.py	/^    def __str__(s):$/;"	m	class:Unit
 __walk	Game.py	/^	def __walk(s):$/;"	m	class:Game	file:
 _action	Game.py	/^	def _action(s):$/;"	m	class:Game
 _battle	Game.py	/^	def _battle(s, u1, u2, turn=1):$/;"	m	class:Game
 _change_map	Game.py	/^	def _change_map(s, connection):$/;"	m	class:Game
+_control	termwin/controlwindow.py	/^	def _control(s):$/;"	m	class:ControlWindow
 _down	termwin/__init__.py	/^def _down(count=1):$/;"	f
 _draw	termwin/frame.py	/^	def _draw(s):$/;"	m	class:Frame
 _draw	termwin/loopwindow.py	/^	def _draw(s):$/;"	m	class:LoopWindow
@@ -74,6 +79,7 @@ _get_creature_items	Parser.py	/^    def _get_creature_items(s, c):$/;"	m	class:P
 _get_map_connections	Parser.py	/^    def _get_map_connections(s, m):$/;"	m	class:Parser
 _get_map_units	Parser.py	/^    def _get_map_units(s, m):$/;"	m	class:Parser
 _get_player_items	Parser.py	/^    def _get_player_items(s, p):$/;"	m	class:Parser
+_ididx	mud.py	/^	_ididx = 0$/;"	v	class:window
 _items	Inventory.py	/^    _items = {}$/;"	v	class:Inventory
 _left	termwin/__init__.py	/^def _left(count=1):$/;"	f
 _level_up	Unit.py	/^    def _level_up(s):$/;"	m	class:Player
@@ -86,21 +92,26 @@ _setcolors	termwin/widget.py	/^	def _setcolors(s):$/;"	m	class:Widget
 _up	termwin/__init__.py	/^def _up(count=1):$/;"	f
 _wraptext	termwin/window.py	/^	def _wraptext(s, text):$/;"	m	class:Window
 a	Test/test.py	/^a = Prompt.prompt('Opção', ('essa', 'outra', 'tres', 'quatro'))$/;"	v
+addstr	mud.py	/^	def addstr(s, *args):$/;"	m	class:window
 addwidget	termwin/frame.py	/^	def addwidget(s, widget):$/;"	m	class:Frame
+addwin	mud.py	/^	def addwin(s, win):$/;"	m	class:frame
 agility	Unit.py	/^    def agility(s): return s._agility$/;"	m	class:Actor
 attack	Unit.py	/^    def attack(s): return s._attack$/;"	m	class:Actor
 attrib	Item.py	/^    def attrib(s): return dict(s._attrib)$/;"	m	class:__Consumable
 clear	termwin/widget.py	/^	def clear(s):$/;"	m	class:Widget
 clear	termwin/window.py	/^	def clear(s):$/;"	m	class:Window
+col	mud.py	/^	def col(s): return s._col$/;"	m	class:frame
 column	termwin/widget.py	/^	def column(s): return s._column$/;"	m	class:Widget
-connections	Map.py	/^    def connections(s): return s._connections$/;"	m	class:Map
+connections	Map.py	/^	def connections(s): return s._connections$/;"	m	class:Map
 consumable	Item.py	/^    def consumable(s): return False$/;"	m	class:__Item
 consumable	Item.py	/^    def consumable(s):$/;"	m	class:__Consumable
 count	Inventory.py	/^    def count(s, name):$/;"	m	class:Inventory
 creatures	main.py	/^creatures = parser.get_creatures('data\/unit.xml')$/;"	v
 default	Prompt.py	/^default = 1$/;"	v
 defense	Unit.py	/^    def defense(s): return s._defense$/;"	m	class:Actor
+desc	Map.py	/^	def desc(s):$/;"	m	class:Map
 die	termwin/__init__.py	/^	def die(s):$/;"	m	class:Manager
+die	termwin/controlwindow.py	/^	def die(s):$/;"	m	class:ControlWindow
 die	termwin/frame.py	/^	def die(s):$/;"	m	class:Frame
 die	termwin/widget.py	/^	def die(s):$/;"	m	class:Widget
 die	termwin/window.py	/^	def die(s):$/;"	m	class:Window
@@ -110,12 +121,13 @@ exp	Unit.py	/^    def exp(s): return s._exp$/;"	m	class:Player
 exp_to_next	Unit.py	/^    def exp_to_next(s): return s._exp_to_next$/;"	m	class:Player
 exp_value	Unit.py	/^    def exp_value(s):$/;"	m	class:Actor
 f1	Test/test.py	/^f1 = wm.Frame(orientation='horizontal', background='130001')$/;"	v
+frame	mud.py	/^class frame:$/;"	c
 g	main.py	/^g = Game(units, maps, items)$/;"	v
 get	termwin/__init__.py	/^	get = lambda: sys.stdin.buffer.raw.read(1)$/;"	f	function:readchar	file:
-get_creature	Map.py	/^    def get_creature(s, name=None):$/;"	m	class:Map
+get_creature	Map.py	/^	def get_creature(s, name=None):$/;"	m	class:Map
 get_creatures	Parser.py	/^    def get_creatures(s, unit_path):$/;"	m	class:Parser
 get_damage	Unit.py	/^    def get_damage(s):$/;"	m	class:Actor
-get_encounter	Map.py	/^    def get_encounter(s):$/;"	m	class:Map
+get_encounter	Map.py	/^	def get_encounter(s):$/;"	m	class:Map
 get_instance	termwin/__init__.py	/^	def get_instance():$/;"	m	class:Manager
 get_items	Parser.py	/^    def get_items(s, item_path):$/;"	m	class:Parser
 get_maps	Parser.py	/^    def get_maps(s, map_path):$/;"	m	class:Parser
@@ -129,28 +141,35 @@ heal	Unit.py	/^    def heal(s, value):$/;"	m	class:Actor
 healing	Item.py	/^    def healing(s):$/;"	m	class:Fruit
 healing	Item.py	/^    def healing(s):$/;"	m	class:Herb
 health	Unit.py	/^    def health(s): return s._health$/;"	m	class:Actor
+height	mud.py	/^	def height(s): return s._height$/;"	m	class:frame
 height	termwin/widget.py	/^	def height(s): return s._height$/;"	m	class:Widget
-input	termwin/window.py	/^	def input(s, prompt):$/;"	m	class:Window
+hidewin	mud.py	/^	def hidewin(s, win):$/;"	m	class:frame
+id	mud.py	/^	def id(s): return s._id$/;"	m	class:window
+input	termwin/window.py	/^	def input(s, prompt=None):$/;"	m	class:Window
 inventory	Unit.py	/^    def inventory(s): return s._inventory$/;"	m	class:Unit
 io	Test/teat.py	/^import termwin.io as io$/;"	I
 items	Inventory.py	/^    def items(s):$/;"	m	class:Inventory
 items	main.py	/^items = parser.get_items('data\/item.xml')$/;"	v
 left	termwin/__init__.py	/^left = '\\x14'$/;"	v
 level	Unit.py	/^    def level(s): return s._level$/;"	m	class:Player
+line	mud.py	/^	def line(s): return s._line$/;"	m	class:frame
+log	control.py	/^log = Window(background='222222')$/;"	v
 m	Test/teat.py	/^m = tw.Manager()$/;"	v
 m	Test/test.py	/^m = wm.Manager()$/;"	v
-main	control.py	/^def main(stdscr):$/;"	f
+m	control.py	/^m = tw.Manager()$/;"	v
 main	essetempotodotemocurses.py	/^def main(stdscr):$/;"	f
+main	mud.py	/^def main(stdscr):$/;"	f
 mainloop	Game.py	/^	def mainloop(s):$/;"	m	class:Game
 maps	main.py	/^maps = parser.get_maps('data\/map.xml')$/;"	v
 max_health	Unit.py	/^    def max_health(s): return s._max_health$/;"	m	class:Actor
+mvwin	mud.py	/^	def mvwin(s, *args):$/;"	m	class:window
 name	Item.py	/^    def name(s): return s._name$/;"	m	class:__Item
 name	Unit.py	/^    def name(s): return s._name$/;"	m	class:Unit
 new_func	utils.py	/^        def new_func(*args, **kwargs):$/;"	f	function:typecheck.wrapper	file:
-on_press	control.py	/^	def on_press(key):$/;"	f	function:main	file:
-on_release	control.py	/^	def on_release(key):$/;"	f	function:main	file:
+orientation	mud.py	/^	def orientation(s): return s._orientation$/;"	m	class:frame
 orientation	termwin/frame.py	/^	def orientation(s): return s._orientation$/;"	m	class:Frame
 parser	main.py	/^parser = Parser()$/;"	v
+pause	termwin/controlwindow.py	/^	def pause(s):$/;"	m	class:ControlWindow
 player	main.py	/^player = parser.get_player('data\/unit.xml')$/;"	v
 pmt	Game.py	/^import Prompt as pmt$/;"	I
 posint	utils.py	/^class posint(int):$/;"	c
@@ -161,21 +180,29 @@ rand	Game.py	/^from random import choice, randint as rand$/;"	x
 rand	Map.py	/^from random import choice, randint as rand$/;"	x
 rand	Parser.py	/^from random import randint as rand$/;"	x
 rand	Unit.py	/^from random import randint as rand$/;"	x
-readchar	termwin/__init__.py	/^def readchar():$/;"	f
+readchar	termwin/__init__.py	/^def readchar(empty=False):$/;"	f
+refresh	mud.py	/^	def refresh(s):$/;"	m	class:frame
+refresh	mud.py	/^	def refresh(s):$/;"	m	class:window
+remwin	mud.py	/^	def remwin(s, win):$/;"	m	class:frame
+resize	mud.py	/^	def resize(s, *args):$/;"	m	class:window
 resize	termwin/frame.py	/^	def resize(s, column, row, height, width):$/;"	m	class:Frame
 resize	termwin/widget.py	/^	def resize(s, column, row, height, width):$/;"	m	class:Widget
 resize	termwin/window.py	/^	def resize(s, column, row, height, width):$/;"	m	class:Window
+resume	termwin/controlwindow.py	/^	def resume(s):$/;"	m	class:ControlWindow
 right	termwin/__init__.py	/^right = '\\x13'$/;"	v
 root	termwin/__init__.py	/^	def root(s): return s._root$/;"	m	class:Manager
 row	termwin/widget.py	/^	def row(s): return s._row$/;"	m	class:Widget
 run	Unit.py	/^    def run(s, u):$/;"	m	class:Actor
 s	Test/teat.py	/^s = io.read('escreve: ')$/;"	v
+scr	control.py	/^scr = ControlWindow(background='222222')$/;"	v
 set	Inventory.py	/^    def set(items):$/;"	m	class:Inventory
 setUp	Test/TestUnit.py	/^    def setUp(s):$/;"	m	class:TestUnit
 setraw	termwin/__init__.py	/^def setraw():$/;"	f
+start	termwin/controlwindow.py	/^	def start(s, ch='0'):$/;"	m	class:ControlWindow
 stats	Unit.py	/^    def stats(s): return { "Name" : s._name }$/;"	m	class:Unit
 stats	Unit.py	/^    def stats(s):$/;"	m	class:Actor
 stats	Unit.py	/^    def stats(s):$/;"	m	class:Player
+stop	termwin/controlwindow.py	/^	def stop(s):$/;"	m	class:ControlWindow
 tabstop	termwin/window.py	/^	tabstop = 4$/;"	v	class:Window
 take	Inventory.py	/^    def take(s, name, count=1):$/;"	m	class:Inventory
 take_damage	Unit.py	/^    def take_damage(s, value):$/;"	m	class:Actor
@@ -184,8 +211,10 @@ test_player_methods	Test/TestUnit.py	/^    def test_player_methods(s):$/;"	m	cla
 tw	Game.py	/^import termwin as tw$/;"	I
 tw	Test/teat.py	/^import termwin as tw$/;"	I
 tw	control.py	/^import termwin as tw$/;"	I
+tw	termwin/controlwindow.py	/^import termwin as tw$/;"	I
 typecheck	utils.py	/^def typecheck(*types, **kwtypes):$/;"	f
 unguard	Unit.py	/^    def unguard(s):$/;"	m	class:Actor
+unhidewin	mud.py	/^	def unhidewin(s, id):$/;"	m	class:frame
 units	main.py	/^units = {$/;"	v
 unsetraw	termwin/__init__.py	/^def unsetraw():$/;"	f
 up	termwin/__init__.py	/^up = '\\x11'$/;"	v
@@ -196,7 +225,9 @@ w2	Test/test.py	/^w2 = wm.Window(weight=2, background='443344')$/;"	v
 w3	Test/test.py	/^w3 = wm.Window(background='223322')$/;"	v
 w4	Test/test.py	/^w4 = wm.Window(background='443344', foreground='aa0000')$/;"	v
 weight	termwin/widget.py	/^	def weight(s): return s._weight$/;"	m	class:Widget
+width	mud.py	/^	def width(s): return s._width$/;"	m	class:frame
 width	termwin/widget.py	/^	def width(s): return s._width$/;"	m	class:Widget
+window	mud.py	/^class window:$/;"	c
 winput	Prompt.py	/^winput = None$/;"	v
 wipe	termwin/window.py	/^	def wipe(s):$/;"	m	class:Window
 wm	Test/test.py	/^import Widget.Manager as wm$/;"	I

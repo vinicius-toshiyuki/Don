@@ -29,4 +29,7 @@
 			<item name="Herb" quantity="1" drop_rate="25"/>
 		</inventory>
 	</creature>
+	<person name="Notdon">
+		<inventory/>
+	</person>
 </units>

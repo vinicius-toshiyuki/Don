@@ -5,31 +5,35 @@ import Prompt as pmt
 from termwin.frame import Frame
 from termwin.window import Window
 from termwin.loopwindow import LoopWindow
+from termwin.controlwindow import ControlWindow
 
 class Game:
 	def __init__(s, units, maps, items):
 		s._units = units
 		s._maps = maps
 		s._items = items
+		s._story = ['Don, don game', 'Don is at home', 'Don nod']
 
 		s._wm = tw.Manager()
 
+		#s.screen = ControlWindow(background='006633')
 		f1 = Frame(weight=3, orientation='horizontal') # f2 e status
 		f2 = Frame() # mochila e main
 		s.w0 = LoopWindow(timeout=3, background='222222') # mochila
 		s.w1 = Window(timeout=.3, background='222222') # main
 		f2.addwidget(s.w1)
 		f2.addwidget(s.w0)
-		s.w2 = LoopWindow(timeout=4, background='222222') # status
+		s.w2 = LoopWindow(timeout=3, background='222222') # status
 		f1.addwidget(f2)
 		f1.addwidget(s.w2)
 
 		f3 = Frame(orientation='horizontal')
-		s.w3 = LoopWindow(timeout=3, background='222222')
-		s.w4 = LoopWindow(timeout=3, background='222222')
+		s.w3 = LoopWindow(timeout=1, background='222222')
+		s.w4 = LoopWindow(timeout=2, background='222222')
 		f3.addwidget(s.w3)
 		f3.addwidget(s.w4)
 
+		#s._wm.root.addwidget(s.screen)
 		s._wm.root.addwidget(f1)
 		s._wm.root.addwidget(f3)
 
@@ -43,8 +47,14 @@ class Game:
 		tw.setraw()
 
 		while True:
-			if (c := s.__map.get_encounter()) is not None:
+			if len(s._story) > 0:
 				s.w1.wipe()
+				s.w1.print(*s._story, sep='\n')
+				s.w1.print('[Press key]')
+				s._story = []
+				tw.readchar()
+				s.w1.wipe()
+			if (c := s.__map.get_encounter()) is not None:
 				s.w1.print('{} encountered {}'.format(s._player, c))
 				winner = s._battle(
 					   *sorted(
@@ -74,7 +84,6 @@ class Game:
 				elif s._player.health <= 0:
 					s.w1.print("Game Over")
 					break
-
 			if s._action():
 				break
 		tw.unsetraw()
@@ -104,6 +113,7 @@ class Game:
 
 	def _change_map(s, connection):
 		s.__map = s._maps[connection]
+		s.__show_stats(s._player)
 
 	def _battle(s, u1, u2, turn=1):
 		def __fight(u1, u2):
@@ -166,6 +176,7 @@ class Game:
 		
 	def __show_stats(s, u):
 		s.w2.wipe()
+		s.w2.print('[{}]\n '.format(s.__map))
 		s.w2.print('\n'.join([
 			'{}: {}'.format(stat, u.stats[stat]) for stat in u.stats]))
 
@@ -203,5 +214,6 @@ class Game:
 				[pmt.go_back] + s.__map.connections,
 				pmt.default
 				)) != pmt.go_back:
-			s.w1.print("{} walked to {}".format(s._player, i))
 			s._change_map(i)
+			s.w1.print("{} walked to {}".format(s._player, i))
+			s.w1.print(s.__map.desc())
